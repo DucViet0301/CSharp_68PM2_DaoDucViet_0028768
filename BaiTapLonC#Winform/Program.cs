@@ -16,7 +16,7 @@ namespace BaiTapLonC_Winform
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new QLSinhVien());
+            Application.Run(new Main());
         }
     }
 }
