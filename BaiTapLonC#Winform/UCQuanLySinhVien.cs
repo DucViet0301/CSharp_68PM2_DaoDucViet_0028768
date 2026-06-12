@@ -277,10 +277,11 @@ namespace BaiTapLonC_Winform
 
             if (e.RowIndex >= 0)
             {
-                DataGridViewRow row = DsSinhVien.Rows[e.RowIndex];
+                DataGridViewRow row = DsSinhVien.Rows[e.RowIndex] ;
 
                 txtMSSV.Text = row.Cells["id"].Value.ToString();
                 txtHoTen.Text = row.Cells["hoten"].Value.ToString();
+
                 cbGioiTinh.Text = row.Cells["gioitinh"].Value.ToString();
 
                 if (row.Cells["ngaysinh"].Value != null)
@@ -289,7 +290,6 @@ namespace BaiTapLonC_Winform
                 }
 
                 cbLop.SelectedValue = row.Cells["malop"].Value.ToString();
-
                 txtMSSV.Enabled = false;
 
             }
@@ -300,7 +300,7 @@ namespace BaiTapLonC_Winform
             int mssv;
             if (string.IsNullOrWhiteSpace(txtMSSV.Text))
             {
-                MessageBox.Show("Vui lòng chọn sinh viên cần xóa!",
+                MessageBox.Show("Vui lòng chọn sinh viên cần xóa !",
                     "Thông báo",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -338,9 +338,10 @@ namespace BaiTapLonC_Winform
                 db.tbl_sinhviens.DeleteOnSubmit(sinhvien);
                 db.SubmitChanges();
 
-                MessageBox.Show("Xóa sinh viên thành công!",
+                MessageBox.Show("Xóa sinh viên thành công !",
                     "Thông báo",
                     MessageBoxButtons.OK,
+
                     MessageBoxIcon.Information);
 
                 LoadData();
@@ -357,11 +358,34 @@ namespace BaiTapLonC_Winform
             
         }
 
-        
+        private void btnsearch_Click(object sender, EventArgs e)
+        {
+            currentPage = 1;
+
+            LoadData(inputSearch.Text.Trim());
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if(currentPage > 1)
+            {
+                currentPage--;
+                LoadData(inputSearch.Text.Trim());
+            }
+        }
+
+        private void next_Click(object sender, EventArgs e)
+        {
+            if (currentPage < totalPage)
+            {
+                currentPage++;
+                LoadData(inputSearch.Text.Trim());
+            }
+        }
 
         private void prev_1_Click(object sender, EventArgs e)
         {
-            currentPage = 1;
+            currentPage = 1 ;
 
             LoadData(inputSearch.Text.Trim());
         }
@@ -369,7 +393,7 @@ namespace BaiTapLonC_Winform
         private void next_length_Click(object sender, EventArgs e)
         {
   
-                currentPage = totalPage;
+                currentPage = totalPage ;
                 LoadData(inputSearch.Text.Trim());
         }
     }
