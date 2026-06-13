@@ -128,18 +128,27 @@ namespace BaiTapLonC_Winform
             {
                 DataGridViewRow row = dvg_dslh.Rows[e.RowIndex];
 
-                textMaID.Text = row.Cells["id"].Value.ToString();
-                textMaLop.Text = row.Cells["malop"].Value.ToString();
-                textTenLop.Text = row.Cells["tenlop"].Value.ToString();
-                if (row.Cells["ghichu"].Value == null)
+                if (dvg_dslh.Columns.Contains("id"))
                 {
-                    textGhiChu.Text = " ";
+                    textMaID.Text = row.Cells["id"].Value?.ToString() ?? "";
                 }
-                else
+
+                if (dvg_dslh.Columns.Contains("malop"))
                 {
-                    textGhiChu.Text = row.Cells["ghichu"].Value.ToString();
+                    textMaLop.Text = row.Cells["malop"].Value?.ToString() ?? "";
                 }
-                    textMaID.Enabled = false; 
+
+                if (dvg_dslh.Columns.Contains("tenlop"))
+                {
+                    textTenLop.Text = row.Cells["tenlop"].Value?.ToString() ?? "";
+                }
+
+                if (dvg_dslh.Columns.Contains("ghichu"))
+                {
+                    textGhiChu.Text = row.Cells["ghichu"].Value?.ToString() ?? "";
+                }
+
+                textMaID.Enabled = false;
             }
         }
 
@@ -215,7 +224,42 @@ namespace BaiTapLonC_Winform
 
         private void btnGetStudent_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(textMaID.Text))
+            {
+                MessageBox.Show("Vui lòng chọn lớp học.");
+                return;
+            }
 
+            try
+            {
+                string maLop = textMaLop.Text;
+
+                var dsSinhVien = db.tbl_sinhviens
+                    .Where(sv => sv.malop == maLop)
+                    .Select(sv => new
+                    {
+                        sv.id,
+                        sv.hoten,
+                        sv.gioitinh,
+                        sv.ngaysinh,
+                        sv.malop
+                    })
+                    .ToList();
+
+                if (dsSinhVien.Count == 0)
+                {
+                    MessageBox.Show("Lớp này chưa có sinh viên.");
+                    return;
+                }
+
+                dvg_dslh.DataSource = dsSinhVien;
+
+                MessageBox.Show("Lấy danh sách sinh viên thành công!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
